@@ -4,6 +4,7 @@ import json
 apk_path = "app.apk"
 cafebazaar_api_key = "API_KEY"
 rollout = 10
+auto_publish = False
 print("Make sure there is no in-progress release on CafeBazaar")
 # Create release request
 release_response = requests.post(
@@ -35,7 +36,7 @@ if release_response.status_code == 201:
             "changelog_fa": changeListFa,
             "developer_note": "",
             "staged_rollout_percentage": rollout,
-            "auto_publish": False,
+            "auto_publish": auto_publish,
         }
 
         rollout_response = requests.post(
