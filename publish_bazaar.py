@@ -1,13 +1,14 @@
 import requests
 import json
 
-GENERATED_APK_PATH = "app.apk"
-CAFE_BAZAAR_API_KEY = "API_KEY"
+apk_path = "app.apk"
+cafebazaar_api_key = "API_KEY"
+rollout = 10
 print("Make sure there is no in-progress release on CafeBazaar")
 # Create release request
 release_response = requests.post(
     "https://api.pishkhan.cafebazaar.ir/v1/apps/releases/",
-    headers={"CAFEBAZAAR-PISHKHAN-API-SECRET": CAFE_BAZAAR_API_KEY},
+    headers={"CAFEBAZAAR-PISHKHAN-API-SECRET": cafebazaar_api_key},
 )
 
 if release_response.status_code == 201:
@@ -16,8 +17,8 @@ if release_response.status_code == 201:
     # Create package upload request
     package_upload_response = requests.post(
         "https://api.pishkhan.cafebazaar.ir/v1/apps/releases/upload/",
-        headers={"CAFEBAZAAR-PISHKHAN-API-SECRET": CAFE_BAZAAR_API_KEY},
-        files={"apk": open(GENERATED_APK_PATH, "rb")},
+        headers={"CAFEBAZAAR-PISHKHAN-API-SECRET": cafebazaar_api_key},
+        files={"apk": open(apk_path, "rb")},
         params={"architecture": "all"},
     )
 
@@ -33,14 +34,14 @@ if release_response.status_code == 201:
             "changelog_en": changeListEn,
             "changelog_fa": changeListFa,
             "developer_note": "",
-            "staged_rollout_percentage": 10,
+            "staged_rollout_percentage": rollout,
             "auto_publish": False,
         }
 
         rollout_response = requests.post(
             "https://api.pishkhan.cafebazaar.ir/v1/apps/releases/commit/",
             headers={
-                "CAFEBAZAAR-PISHKHAN-API-SECRET": CAFE_BAZAAR_API_KEY,
+                "CAFEBAZAAR-PISHKHAN-API-SECRET": cafebazaar_api_key,
                 "Content-Type": "application/json"
             },
             data=json.dumps(rollout_payload))
